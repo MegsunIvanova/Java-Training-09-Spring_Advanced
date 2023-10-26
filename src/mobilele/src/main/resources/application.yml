@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://${MYSQL_HOST:localhost}:3306/mobilele?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:123456}
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+
+  #  mvc:
+  #    hiddenmethod:
+  #      filter:
+  #        enabled: true
+  # sql.init.mode -> for initializing the DB
+  sql:
+    init:
+      mode: never
+# ${DEFAULT_ADMIN_PASS} is environment variable (should be set up in IntelliJ Run Configurations or in Control Panel):
+default.admin.pass: ${DEFAULT_ADMIN_PASS:topsecret}
+logging:
+  level:
+    #    org.springframework: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+
+open.exchange.rates:
+  schema: https
+  host: openexchangerates.org
+  path: /api/latest.json
+  app_id: ${APP_ID:test}
+  symbols: EUR,BGN
+  enabled: false
