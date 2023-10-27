@@ -6,34 +6,9 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "roles")
 public class UserRoleEntity extends BaseEntity {
-
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-
-    private String name;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
-
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public UserRoleEntity setId(Long id) {
-//        this.id = id;
-//        return this;
-//    }
-
-    public String getName() {
-        return name;
-    }
-
-    public UserRoleEntity setName(String name) {
-        this.name = name;
-        return this;
-    }
 
     public UserRoleEnum getRole() {
         return role;
@@ -48,8 +23,7 @@ public class UserRoleEntity extends BaseEntity {
     public String toString() {
         return "UserRoleEntity{" +
                 "id=" + getId() +
-                ", name='" + name + '\'' +
-                ", role=" + role +
+                ", role=" + role.name() +
                 '}';
     }
 }

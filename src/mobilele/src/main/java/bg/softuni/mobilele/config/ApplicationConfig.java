@@ -17,9 +17,4 @@ public class ApplicationConfig {
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-    }
 }

@@ -2,7 +2,9 @@ package bg.softuni.mobilele.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -27,7 +29,15 @@ public class UserEntity extends BaseEntity {
     private String imageURL;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<UserRoleEntity> userRoles;
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<UserRoleEntity> roles;
+
+    public UserEntity() {
+        this.roles = new ArrayList<>();
+    }
 
     public String getEmail() {
         return email;
@@ -83,17 +93,17 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
-    public List<UserRoleEntity> getUserRoles() {
-        return userRoles;
+    public List<UserRoleEntity> getRoles() {
+        return roles;
     }
 
-    public UserEntity setUserRoles(List<UserRoleEntity> userRoles) {
-        this.userRoles = userRoles;
+    public UserEntity setRoles(List<UserRoleEntity> roles) {
+        this.roles = roles;
         return this;
     }
 
     public UserEntity addRole(UserRoleEntity userRole) {
-        this.userRoles.add(userRole);
+        this.roles.add(userRole);
         return this;
     }
 
@@ -106,7 +116,7 @@ public class UserEntity extends BaseEntity {
                 ", lastName='" + lastName + '\'' +
                 ", isActive=" + active +
                 ", imageURL='" + imageURL + '\'' +
-                ", userRoles=" + userRoles +
+                ", userRoles=" + roles.stream().map(r -> r.getRole().name()).collect(Collectors.joining(", ")) +
                 '}';
     }
 }

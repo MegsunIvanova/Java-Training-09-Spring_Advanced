@@ -8,7 +8,6 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties(prefix = "open.exchange.rates")
 public class OpenExchangeRatesConfig {
-
     private String appId;
     private List<String> symbols;
     private String host;
