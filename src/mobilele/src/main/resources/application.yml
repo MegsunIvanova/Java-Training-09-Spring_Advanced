@@ -22,13 +22,16 @@ spring:
     init:
       mode: never
 # ${DEFAULT_ADMIN_PASS} is environment variable (should be set up in IntelliJ Run Configurations or in Control Panel):
-default.admin.pass: ${DEFAULT_ADMIN_PASS:topsecret}
+mobilele:
+  default.admin.pass: ${DEFAULT_ADMIN_PASS:topsecret}
+  remember.me.key: ${REMEMBER_ME_KEY:topsecret}
+
 logging:
   level:
     #    org.springframework: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
-    org.springframework.security: TRACE
+#    org.springframework.security: TRACE
 
 open.exchange.rates:
   schema: https

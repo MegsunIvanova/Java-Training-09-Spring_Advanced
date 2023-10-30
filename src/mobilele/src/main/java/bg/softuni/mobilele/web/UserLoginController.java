@@ -16,13 +16,13 @@ public class UserLoginController {
         return "auth-login";
     }
 
-    @PostMapping("/users/login-error")
+    @PostMapping("/login-error")
     public String onFailure(
             @ModelAttribute("email") String email,
             Model model) {
 
         model.addAttribute("email", email);
-        model.addAttribute("bad_credentials", "true");
+        model.addAttribute("bad_credentials", true);
 
         return "auth-login";
     }

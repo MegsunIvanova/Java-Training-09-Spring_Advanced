@@ -1,7 +1,10 @@
 package bg.softuni.mobilele.service.impl;
 
 import bg.softuni.mobilele.model.entity.UserEntity;
+import bg.softuni.mobilele.model.entity.UserRoleEntity;
 import bg.softuni.mobilele.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +22,8 @@ public class MobileleUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+        return userRepository
+                .findByEmail(email)
                 .map(this::map)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found!"));
     }
@@ -28,7 +32,11 @@ public class MobileleUserDetailsServiceImpl implements UserDetailsService {
         return User
                 .withUsername(userEntity.getEmail())
                 .password(userEntity.getPassword())
-                .authorities(List.of())//TODO: add roles
+                .authorities(userEntity.getRoles().stream().map(MobileleUserDetailsServiceImpl::map).toList())
                 .build();
+    }
+
+    private static GrantedAuthority map(UserRoleEntity userRoleEntity) {
+        return new SimpleGrantedAuthority("ROLE_" + userRoleEntity.getRole().name());
     }
 }

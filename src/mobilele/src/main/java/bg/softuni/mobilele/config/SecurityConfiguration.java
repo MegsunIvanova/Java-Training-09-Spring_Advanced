@@ -1,7 +1,9 @@
 package bg.softuni.mobilele.config;
 
+import bg.softuni.mobilele.model.enums.UserRoleEnum;
 import bg.softuni.mobilele.repository.UserRepository;
 import bg.softuni.mobilele.service.impl.MobileleUserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfiguration {
+    private final String rememberMeKey;
+
+    public SecurityConfiguration(@Value("${mobilele.remember.me.key}")
+                                 String rememberMeKey) {
+        this.rememberMeKey = rememberMeKey;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //Defines which urls are visible by which users
@@ -25,6 +34,8 @@ public class SecurityConfiguration {
                             //Allow anyone to see the home page, the registration page and login form
                             .requestMatchers("/", "/users/login", "users/register", "users/login-error").permitAll()
                             .requestMatchers("/offers/all").permitAll()
+                            //Allow only ADMIN to see page
+                            .requestMatchers("/brands").hasRole(UserRoleEnum.ADMIN.name())
                             //All other requests are authenticated
                             .anyRequest().authenticated();
                 })
@@ -47,8 +58,13 @@ public class SecurityConfiguration {
                             .logoutSuccessUrl("/")
                             //Invalidate HTTP session
                             .invalidateHttpSession(true);
-                }).build();
-        //TODO: remember me!
+                })
+                .rememberMe(rememberMe -> {
+                    rememberMe.key(rememberMeKey)
+                            .rememberMeParameter("rememberme")
+                            .rememberMeCookieName("rememberme");
+                })
+                .build();
     }
 
     @Bean
