@@ -1,0 +1,25 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Pathfinder</title>
+    <th:block th:insert="~{/fragments/head}"/>
+</head>
+<body>
+<div class="wrapper">
+    <!-- Navigation -->
+    <th:block th:insert="~{/fragments/header}"/>
+
+    <section class="road" th:each="route : ${routes}">
+        <div>
+            <h2 th:text="*{name}">Title</h2>
+            <p  th:text="*{description}">Very long description</p>
+            <a th:href="@{/routes/details/{id}(id=${route.id})}" class="btn">Learn More</a>
+        </div>
+        <img class="rounded-circle w-75 ml-5" src="/images/pic1.jpg" alt="Title image">
+    </section>
+</div>
+<!-- Wrapper Ends -->
+</body>
+<th:block th:insert="~{/fragments/footer}"/>
+</html>

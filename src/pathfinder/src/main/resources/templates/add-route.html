@@ -1,0 +1,135 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pathfinder</title>
+    <th:block th:insert="~{/fragments/head}"/>
+</head>
+<body>
+<!--<div class="wrapper">-->
+<!-- Navigation -->
+<th:block th:insert="~{/fragments/header}"/>
+
+<!-- Top Container -->
+<div class="row justify-content-center ">
+    <form id="add-route-form"
+          class="w-50 rounded text-white mt-5"
+          th:action="@{/routes/add}"
+          th:method="POST"
+          th:object="${routeDTO}"
+          enctype="multipart/form-data">
+
+        <h3 class="border-left border-light pl-2">Add a new route</h3>
+        <div>
+            <div class="form-group">
+                <label for="inputName" class="col-form-label ">Name</label>
+            </div>
+            <div class="form-group">
+                <input th:field="*{name}"
+                       th:errorclass="'is-invalid bg-danger'"
+                       name="name"
+                       type="text"
+                       id="inputName"
+                       class="form-control"
+                       aria-describedby="inputNameError">
+                <small id="inputNameError"
+                       class="invalid-feedback rounded"
+                       th:text="${#strings.listJoin(#fields.errors('name'), ' ')}">
+                    Name length must be more than 3 characters</small>
+
+            </div>
+        </div>
+
+        <div>
+            <div class="form-group">
+                <label for="inputDescription" class="col-form-label ">Description</label>
+            </div>
+            <div class="form-group">
+                    <textarea th:field="*{description}"
+                              th:errorclass="'is-invalid bg-danger'"
+                              name="description"
+                              id="inputDescription"
+                              class="form-control"
+                              aria-describedby="inputDescriptionError"></textarea>
+                <small id="inputDescriptionError"
+                       class="invalid-feedback form-text rounded"
+                       th:text="${#strings.listJoin(#fields.errors('description'), ' ')}">
+                    Description length must be more than 5 characters</small>
+            </div>
+        </div>
+
+        <div>
+            <div class="form-group">
+                <label for="inputGpx" class="col-form-label ">GPX Coordinates</label>
+            </div>
+            <div class="form-group">
+                <input type="file"
+                       name="gpxCoordinates"
+                       th:field="*{gpxCoordinates}"
+                       th:errorclass="'is-invalid bg-danger'"
+                       id="inputGpx"
+                       class="form-control-file"
+                       aria-describedby="inputGpxError">
+                <small id="inputGpxError"
+                       class="text-danger form-text rounded"
+                       th:if="${#fields.hasErrors('gpxCoordinates')}"
+                       th:errors="*{gpxCoordinates}">Must be valid GPX Coordinates</small>
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label for="level">Level</label>
+                <select th:field="*{level}"
+                        th:errorclass="'is-invalid bg-danger'"
+                        id="level" name="level"
+                        class="custom-select">
+                    <option value="" selected>Select level</option>
+                    <option th:each="l : ${levels}"
+                            th:text="${#strings.capitalize(#strings.toLowerCase(l))}"
+                            th:value="${l}"></option>
+                    <!--                    <option value="1" text="ADVANCED">Select level</option>-->
+                </select>
+            </div>
+        </div>
+        <div>
+
+            <div class="form-group">
+                <label for="videoUrl">Video Url (only last eleven characters from Youtube)</label>
+                <input th:field="*{videoUrl}"
+                       th:errorclass="'is-invalid bg-danger'"
+                       id="videoUrl"
+                       name="videoUrl"
+                       type="text"
+                       class="form-control"
+                       placeholder="Video url">
+                <small id="videoUrlError"
+                       class="invalid-feedback form-text rounded"
+                       th:text="${#strings.listJoin(#fields.errors('videoUrl'), ' ')}"></small>
+            </div>
+        </div>
+
+        <div>
+            <div class="form-group p-3">
+                <label class="p-2" for="categories">Categories:</label>
+                <input th:field="*{categories}"
+                       th:errorclass="'is-invalid bg-danger'"
+                       th:each="c : ${categories}"
+                       th:text="${#strings.capitalize(#strings.toLowerCase(c))}"
+                       th:value="${c}"
+                       class="m-3"
+                       type="checkbox"
+                       name="categories"
+                       id="categories"
+                       value="1" text="Category">
+                <br>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <button class="btn btn-primary btn-block w-50" type="submit">Add Route</button>
+        </div>
+
+    </form>
+</div>
+<th:block th:insert="~{/fragments/footer}"/>
+</body>
+</html>
