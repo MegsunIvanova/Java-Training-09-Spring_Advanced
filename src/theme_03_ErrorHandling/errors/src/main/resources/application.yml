@@ -1,0 +1,8 @@
+#Забранява/модифицира `Whitelabel Error Page` page:
+#server:
+#  error:
+#    include-message: always
+#    include-stacktrace: always
+#    path: /pesho #къде да ни прехвърля при грешка
+#    whitelabel:
+#      enabled: off
