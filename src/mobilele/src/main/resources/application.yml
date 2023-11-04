@@ -4,6 +4,7 @@ spring:
     url: "jdbc:mysql://${MYSQL_HOST:localhost}:3306/mobilele?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
     username: ${MYSQL_USER:root}
     password: ${MYSQL_PASSWORD:123456}
+
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     defer-datasource-initialization: true
@@ -13,14 +14,27 @@ spring:
     hibernate:
       ddl-auto: update
 
-  #  mvc:
-  #    hiddenmethod:
-  #      filter:
-  #        enabled: true
-  # sql.init.mode -> for initializing the DB
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
   sql:
     init:
       mode: never
+
+  thymeleaf: # Thymeleaf
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+    prefix: file:src/main/resources/templates/
+
+  web:
+    resources:
+      static-locations: file:src/main/resources/static/
+      cache:
+        period: 0
+
 # ${DEFAULT_ADMIN_PASS} is environment variable (should be set up in IntelliJ Run Configurations or in Control Panel):
 mobilele:
   default.admin.pass: ${DEFAULT_ADMIN_PASS:topsecret}

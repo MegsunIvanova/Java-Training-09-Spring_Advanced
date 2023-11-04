@@ -1,9 +1,11 @@
 package bg.softuni.mobilele.web;
 
 import bg.softuni.mobilele.model.dto.CreateOfferDTO;
+import bg.softuni.mobilele.model.dto.OfferDetailDTO;
 import bg.softuni.mobilele.model.enums.EngineEnum;
 import bg.softuni.mobilele.service.BrandService;
 import bg.softuni.mobilele.service.OfferService;
+import bg.softuni.mobilele.service.exception.ObjectNotFoundException;
 import bg.softuni.mobilele.service.impl.OfferServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -62,8 +64,22 @@ public class OfferController {
     }
 
     @GetMapping("/{uuid}")
-    public String details(@PathVariable("uuid") UUID uuid) {
+    public String details(@PathVariable("uuid") UUID uuid, Model model) {
+        OfferDetailDTO offerDetailDTO = offerService
+                .getOfferDetail(uuid)
+                .orElseThrow(() -> new ObjectNotFoundException("Offer with uuid " + uuid + " was not found!"));
+
+        model.addAttribute("offers", offerDetailDTO);
+
         return "details";
+    }
+
+    @DeleteMapping("/{uuid}")
+    public String delete(@PathVariable("uuid") UUID uuid, Model model) {
+
+        offerService.deleteOffer(uuid);
+
+        return "redirect:/offers/all";
     }
 }
 
