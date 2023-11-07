@@ -74,4 +74,8 @@ public class UserRegisterDTO {
         this.confirmPassword = confirmPassword;
         return this;
     }
+
+    public String getUserNames() {
+        return firstName + " " + lastName;
+    }
 }

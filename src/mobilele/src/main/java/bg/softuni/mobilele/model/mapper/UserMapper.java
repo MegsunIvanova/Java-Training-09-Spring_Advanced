@@ -8,6 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(target = "active", constant = "true")
+    @Mapping(target = "active", constant = "false")
     UserEntity userDtoToUserEntity(UserRegisterDTO registerDTO);
 }
