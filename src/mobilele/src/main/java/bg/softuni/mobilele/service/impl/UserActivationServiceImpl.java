@@ -20,4 +20,10 @@ public class UserActivationServiceImpl implements UserActivationService {
         //TODO: add activation links
         emailService.sendRegistrationEmail(event.getUserEmail(), event.getUserNames());
     }
+
+    @Override
+    public void cleanUpObsoleteActivationLinks() {
+        //TODO: Implement
+        System.out.println("NOT YET");
+    }
 }
