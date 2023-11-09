@@ -2,7 +2,7 @@ package bg.softuni.mobilele.config;
 
 import bg.softuni.mobilele.model.enums.UserRoleEnum;
 import bg.softuni.mobilele.repository.UserRepository;
-import bg.softuni.mobilele.service.impl.MobileleUserDetailsServiceImpl;
+import bg.softuni.mobilele.service.impl.MobileleUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                             //Allow anyone to see the home page, the registration page and login form
                             .requestMatchers("/", "/users/login", "users/register", "users/login-error").permitAll()
                             .requestMatchers("/offers/all").permitAll()
+                            .requestMatchers("/api/currency/convert").permitAll()
                             .requestMatchers(HttpMethod.GET, "/offer/**").permitAll()
                             .requestMatchers("/error").permitAll()
                             //Allow only ADMIN to see page
@@ -74,7 +75,7 @@ public class SecurityConfiguration {
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         //This service translates the mobilele users and roles
         // to representation which Spring-Security understands
-        return new MobileleUserDetailsServiceImpl(userRepository);
+        return new MobileleUserDetailsService(userRepository);
     }
 
     @Bean

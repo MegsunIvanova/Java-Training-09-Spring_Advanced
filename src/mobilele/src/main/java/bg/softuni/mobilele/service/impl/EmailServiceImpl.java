@@ -36,6 +36,7 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper.setReplyTo(mobileleEmail);
             mimeMessageHelper.setSubject("Welcome to Mobilele");
             mimeMessageHelper.setText(generateRegistrationEmailBody(userName, activationCode), true);
+
             javaMailSender.send(mimeMessageHelper.getMimeMessage());
 
         } catch (MessagingException e) {

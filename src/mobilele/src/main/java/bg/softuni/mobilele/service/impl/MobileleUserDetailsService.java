@@ -10,13 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.List;
-
 //@Service ---> няма анотация за сървис, защото има Bean в SecurityConfiguration.class
-public class MobileleUserDetailsServiceImpl implements UserDetailsService {
+public class MobileleUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
-    public MobileleUserDetailsServiceImpl(UserRepository userRepository) {
+    public MobileleUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -32,7 +30,7 @@ public class MobileleUserDetailsServiceImpl implements UserDetailsService {
         return User
                 .withUsername(userEntity.getEmail())
                 .password(userEntity.getPassword())
-                .authorities(userEntity.getRoles().stream().map(MobileleUserDetailsServiceImpl::map).toList())
+                .authorities(userEntity.getRoles().stream().map(MobileleUserDetailsService::map).toList())
                 .build();
     }
 

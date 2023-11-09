@@ -1,0 +1,42 @@
+spring:
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: never
+
+# ${DEFAULT_ADMIN_PASS} is environment variable (should be set up in IntelliJ Run Configurations or in Control Panel):
+mobilele:
+  default.admin.pass: ${DEFAULT_ADMIN_PASS:topsecret}
+  remember.me.key: ${REMEMBER_ME_KEY:topsecret}
+
+logging:
+  level:
+    #    org.springframework: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+#    org.springframework.security: TRACE
+
+open.exchange.rates:
+  schema: https
+  host: dummy
+  path: /api/latest.json
+  app_id: test
+  symbols: EUR,BGN
+  enabled: false
+
+#smtp server settings (We use for testing MailHog -> http://localhost:8025/#)
+mail:
+  mobilele: "mobilele@example.com"
+  host: localhost
+  port: 3333
+  username: test@example.com
+  password: topsecret

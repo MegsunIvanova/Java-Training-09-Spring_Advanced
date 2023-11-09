@@ -30,7 +30,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation 'com.icegreen:greenmail:2.0.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.hsqldb:hsqldb'
 }
 
 tasks.named('test') {
