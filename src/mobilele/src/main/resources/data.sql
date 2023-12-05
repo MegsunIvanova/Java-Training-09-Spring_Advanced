@@ -29,19 +29,19 @@ VALUES (1, 'Camry', 'CAR', 1),
        (5, '601', 'CAR', 3),
        (6, '601S', 'CAR', 3);
 
-INSERT INTO offers (id, description, engine, image_url, mileage, price, transmission, uuid, year, model_id)
-VALUES (1, 'Top Trabi!', 'GASOLINE',
+INSERT INTO offers (id, description, engine, image_url, mileage, price, transmission, uuid, year, model_id, seller_id)
+VALUES (1, 'Top Trabi 1!', 'GASOLINE',
         'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Trabant_601_Mulhouse_FRA_001.JPG/1280px-Trabant_601_Mulhouse_FRA_001.JPG',
-        24000, 2223.00, 'MANUAL', 'd2e388f5-1a46-4253-b7e3-a0f74b36f47e', 1987, 5),
-       (2, 'Top Trabi!', 'GASOLINE',
+        24000, 2223.00, 'MANUAL', 'd2e388f5-1a46-4253-b7e3-a0f74b36f47e', 1987, 5, 1),
+       (2, 'Top Trabi 1!', 'GASOLINE',
         'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Trabant_601S_Universal_1984_II.jpg/1280px-Trabant_601S_Universal_1984_II.jpg',
-        25000, 2000.00, 'MANUAL', 'be8cd8ac-6ab4-4a3f-b192-7ce2fd6c8cd3', 1985, 6),
-       (3, 'Top Trabi!', 'GASOLINE',
+        25000, 2000.00, 'MANUAL', 'be8cd8ac-6ab4-4a3f-b192-7ce2fd6c8cd3', 1985, 6, 1),
+       (3, 'Top Trabi 2!', 'GASOLINE',
         'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Trabant_601S_Universal_1984_II.jpg/1280px-Trabant_601S_Universal_1984_II.jpg',
-        25000, 2000.00, 'MANUAL', '40b6b119-705a-4df3-b39a-1f68655f3854', 1986, 6),
-       (4, 'Top Trabi!', 'GASOLINE',
+        25000, 2000.00, 'MANUAL', '40b6b119-705a-4df3-b39a-1f68655f3854', 1986, 6, 2),
+       (4, 'Top Trabi 2!', 'GASOLINE',
         'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Trabant_601S_Universal_1984_II.jpg/1280px-Trabant_601S_Universal_1984_II.jpg',
-        25000, 2000.00, 'MANUAL', 'be114147-e607-4558-bb7e-ffce834b8fbe', 1987, 6),
-       (5, 'Top Trabi!', 'GASOLINE',
+        25000, 2000.00, 'MANUAL', 'be114147-e607-4558-bb7e-ffce834b8fbe', 1987, 6, 2),
+       (5, 'Top Trabi 2!', 'GASOLINE',
         'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Trabant_601S_Universal_1984_II.jpg/1280px-Trabant_601S_Universal_1984_II.jpg',
-        25000, 2000.00, 'MANUAL', 'b8ad5bf1-392b-4426-b8d8-ca4026ede090', 1988, 6);
+        25000, 2000.00, 'MANUAL', 'b8ad5bf1-392b-4426-b8d8-ca4026ede090', 1988, 6, 2);

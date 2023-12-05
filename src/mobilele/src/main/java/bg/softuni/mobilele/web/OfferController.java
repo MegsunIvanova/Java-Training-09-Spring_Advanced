@@ -8,6 +8,8 @@ import bg.softuni.mobilele.service.OfferService;
 import bg.softuni.mobilele.service.exception.ObjectNotFoundException;
 import bg.softuni.mobilele.service.impl.OfferServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,7 +49,8 @@ public class OfferController {
     @PostMapping("/add")
     public String addOffer(@Valid CreateOfferDTO creatOfferDTO,
                            BindingResult bindingResult,
-                           RedirectAttributes rAtt) {
+                           RedirectAttributes rAtt,
+                           @AuthenticationPrincipal UserDetails seller) {
 
         if (bindingResult.hasErrors()) {
             rAtt.addFlashAttribute("creatOfferDTO", creatOfferDTO);
@@ -58,7 +61,7 @@ public class OfferController {
             return "redirect:/offer/add";
         }
 
-        UUID newOfferUUID = this.offerService.createOffer(creatOfferDTO);
+        UUID newOfferUUID = this.offerService.createOffer(creatOfferDTO, seller);
 
         return "redirect:/offer/" + newOfferUUID;
     }

@@ -5,12 +5,17 @@ import bg.softuni.mobilele.model.dto.OfferDetailDTO;
 import bg.softuni.mobilele.model.dto.OfferSummaryDTO;
 import bg.softuni.mobilele.model.entity.ModelEntity;
 import bg.softuni.mobilele.model.entity.OfferEntity;
+import bg.softuni.mobilele.model.entity.UserEntity;
 import bg.softuni.mobilele.repository.ModelRepository;
 import bg.softuni.mobilele.repository.OfferRepository;
+import bg.softuni.mobilele.repository.UserRepository;
+import bg.softuni.mobilele.service.MonitoringService;
 import bg.softuni.mobilele.service.OfferService;
+import bg.softuni.mobilele.service.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,16 +26,27 @@ import java.util.UUID;
 public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
     private final ModelRepository modelRepository;
+    private final MonitoringService monitoringService;
+    private final UserRepository userRepository;
+
 
     public OfferServiceImpl(OfferRepository offerRepository,
-                            ModelRepository modelRepository) {
+                            ModelRepository modelRepository,
+                            MonitoringService monitoringService, UserRepository userRepository) {
         this.offerRepository = offerRepository;
         this.modelRepository = modelRepository;
+        this.monitoringService = monitoringService;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public UUID createOffer(CreateOfferDTO createOfferDTO) {
+    public UUID createOffer(CreateOfferDTO createOfferDTO, UserDetails seller) {
         OfferEntity newOffer = map(createOfferDTO);
+
+       UserEntity sellerEntity = userRepository.findByEmail(seller.getUsername())
+                .orElseThrow(() -> new ObjectNotFoundException("User with email " + seller.getUsername() + " not found."));
+
+        newOffer.setSeller(sellerEntity);
         offerRepository.save(newOffer);
 
         return newOffer.getUuid();
@@ -38,6 +54,8 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Page<OfferSummaryDTO> getAllOffers(Pageable pageable) {
+        monitoringService.logOfferSearch();
+
         return offerRepository
                 .findAll(pageable)
                 .map(OfferServiceImpl::mapAsSummary);
