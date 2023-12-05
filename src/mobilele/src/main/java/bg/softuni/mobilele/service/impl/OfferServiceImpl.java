@@ -77,6 +77,37 @@ public class OfferServiceImpl implements OfferService {
         offerRepository.deleteByUuid(uuid);
     }
 
+    @Override
+    public boolean isOwner(UUID uuid, String username) {
+        OfferEntity offerEntity = offerRepository.findFirstByUuid(uuid)
+                .orElse(null);
+
+        return isOwner(offerEntity, username);
+    }
+
+    private boolean isOwner(OfferEntity offerEntity, String username) {
+        if (offerEntity == null || username == null) {
+            return false;
+        }
+
+        UserEntity userEntity = userRepository
+                .findByEmail(username)
+                .orElseThrow(() -> new ObjectNotFoundException("Unknown user ..."));
+
+        if (isAdmin(userEntity)) {
+            return true;
+        }
+
+        return offerEntity.getSeller().getEmail().equals(username);
+    }
+
+    private boolean isAdmin(UserEntity userEntity) {
+        return userEntity.getRoles()
+                .stream()
+                .map(UserRoleEntity::getRole)
+                .anyMatch(r -> r.equals(UserRoleEnum.ADMIN));
+    }
+
     private OfferDetailDTO mapAsDetails(OfferEntity offerEntity, UserDetails viewer) {
 
         return new OfferDetailDTO(
@@ -90,30 +121,7 @@ public class OfferServiceImpl implements OfferService {
                 offerEntity.getTransmission(),
                 offerEntity.getImageUrl(),
                 offerEntity.getSeller().getFirstName(),
-                isOwner(offerEntity, viewer));
-    }
-
-    private boolean isOwner(OfferEntity offerEntity, UserDetails viewer) {
-        if (viewer == null) {
-            return false;
-        }
-
-        UserEntity userEntity = userRepository
-                .findByEmail(viewer.getUsername())
-                .orElseThrow(() -> new ObjectNotFoundException("Unknown user ..."));
-
-        if (isAdmin(userEntity)) {
-            return true;
-        }
-
-        return offerEntity.getSeller().getEmail().equals(viewer.getUsername());
-    }
-
-    private boolean isAdmin(UserEntity userEntity) {
-        return userEntity.getRoles()
-                .stream()
-                .map(UserRoleEntity::getRole)
-                .anyMatch(r -> r.equals(UserRoleEnum.ADMIN));
+                isOwner(offerEntity, viewer != null ? viewer.getUsername() : null));
     }
 
     private static OfferSummaryDTO mapAsSummary(OfferEntity offerEntity) {
