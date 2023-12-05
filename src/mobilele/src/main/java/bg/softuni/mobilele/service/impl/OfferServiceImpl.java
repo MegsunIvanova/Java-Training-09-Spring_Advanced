@@ -6,6 +6,8 @@ import bg.softuni.mobilele.model.dto.OfferSummaryDTO;
 import bg.softuni.mobilele.model.entity.ModelEntity;
 import bg.softuni.mobilele.model.entity.OfferEntity;
 import bg.softuni.mobilele.model.entity.UserEntity;
+import bg.softuni.mobilele.model.entity.UserRoleEntity;
+import bg.softuni.mobilele.model.enums.UserRoleEnum;
 import bg.softuni.mobilele.repository.ModelRepository;
 import bg.softuni.mobilele.repository.OfferRepository;
 import bg.softuni.mobilele.repository.UserRepository;
@@ -43,7 +45,7 @@ public class OfferServiceImpl implements OfferService {
     public UUID createOffer(CreateOfferDTO createOfferDTO, UserDetails seller) {
         OfferEntity newOffer = map(createOfferDTO);
 
-       UserEntity sellerEntity = userRepository.findByEmail(seller.getUsername())
+        UserEntity sellerEntity = userRepository.findByEmail(seller.getUsername())
                 .orElseThrow(() -> new ObjectNotFoundException("User with email " + seller.getUsername() + " not found."));
 
         newOffer.setSeller(sellerEntity);
@@ -62,10 +64,11 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Optional<OfferDetailDTO> getOfferDetail(UUID uuid) {
+    public Optional<OfferDetailDTO> getOfferDetail(UUID uuid, UserDetails viewer) {
+
         return offerRepository
                 .findFirstByUuid(uuid)
-                .map(OfferServiceImpl::mapAsDetails);
+                .map(o -> this.mapAsDetails(o, viewer));
     }
 
     @Override
@@ -74,8 +77,8 @@ public class OfferServiceImpl implements OfferService {
         offerRepository.deleteByUuid(uuid);
     }
 
-    private static OfferDetailDTO mapAsDetails(OfferEntity offerEntity) {
-        //TODO: reuse
+    private OfferDetailDTO mapAsDetails(OfferEntity offerEntity, UserDetails viewer) {
+
         return new OfferDetailDTO(
                 offerEntity.getUuid().toString(),
                 offerEntity.getModel().getBrand().getName(),
@@ -85,7 +88,32 @@ public class OfferServiceImpl implements OfferService {
                 offerEntity.getPrice(),
                 offerEntity.getEngine(),
                 offerEntity.getTransmission(),
-                offerEntity.getImageUrl());
+                offerEntity.getImageUrl(),
+                offerEntity.getSeller().getFirstName(),
+                isOwner(offerEntity, viewer));
+    }
+
+    private boolean isOwner(OfferEntity offerEntity, UserDetails viewer) {
+        if (viewer == null) {
+            return false;
+        }
+
+        UserEntity userEntity = userRepository
+                .findByEmail(viewer.getUsername())
+                .orElseThrow(() -> new ObjectNotFoundException("Unknown user ..."));
+
+        if (isAdmin(userEntity)) {
+            return true;
+        }
+
+        return offerEntity.getSeller().getEmail().equals(viewer.getUsername());
+    }
+
+    private boolean isAdmin(UserEntity userEntity) {
+        return userEntity.getRoles()
+                .stream()
+                .map(UserRoleEntity::getRole)
+                .anyMatch(r -> r.equals(UserRoleEnum.ADMIN));
     }
 
     private static OfferSummaryDTO mapAsSummary(OfferEntity offerEntity) {

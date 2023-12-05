@@ -13,6 +13,6 @@ import java.util.UUID;
 public interface OfferService {
     UUID createOffer(CreateOfferDTO createOfferDTO, UserDetails seller);
     Page<OfferSummaryDTO> getAllOffers(Pageable pageable);
-    Optional<OfferDetailDTO> getOfferDetail(UUID uuid);
+    Optional<OfferDetailDTO> getOfferDetail(UUID uuid, UserDetails viewer);
     void deleteOffer(UUID uuid);
 }
