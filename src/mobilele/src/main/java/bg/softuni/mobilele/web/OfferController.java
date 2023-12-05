@@ -8,6 +8,7 @@ import bg.softuni.mobilele.service.OfferService;
 import bg.softuni.mobilele.service.exception.ObjectNotFoundException;
 import bg.softuni.mobilele.service.impl.OfferServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -79,8 +80,10 @@ public class OfferController {
         return "details";
     }
 
+    @PreAuthorize("@offerServiceImpl.isOwner(#uuid, #principal.username)")
     @DeleteMapping("/{uuid}")
-    public String delete(@PathVariable("uuid") UUID uuid, Model model) {
+    public String delete(@PathVariable("uuid") UUID uuid,
+                         @AuthenticationPrincipal UserDetails principal) {
 
         offerService.deleteOffer(uuid);
 
