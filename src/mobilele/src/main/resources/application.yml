@@ -55,6 +55,10 @@ open.exchange.rates:
   symbols: EUR,BGN
   enabled: false
 
+google.recaptcha:
+  site: ${RECAPTCHA_SITE_KEY:test}
+  secret: ${RECAPTCHA_SECRET_KEY:test}
+
 #smtp server settings (We use for testing MailHog -> http://localhost:8025/#)
 mail:
   mobilele: "mobilele@example.com"

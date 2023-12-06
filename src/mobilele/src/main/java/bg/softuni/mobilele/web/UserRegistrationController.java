@@ -1,15 +1,14 @@
 package bg.softuni.mobilele.web;
 
+import bg.softuni.mobilele.model.dto.ReCaptchaResponseDTO;
 import bg.softuni.mobilele.model.dto.UserRegisterDTO;
+import bg.softuni.mobilele.service.ReCaptchaService;
 import bg.softuni.mobilele.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -17,9 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserRegistrationController {
 
     private final UserService userService;
+    private final ReCaptchaService reCaptchaService;
 
-    public UserRegistrationController(UserService userService) {
+    public UserRegistrationController(UserService userService, ReCaptchaService reCaptchaService) {
         this.userService = userService;
+        this.reCaptchaService = reCaptchaService;
     }
 
     @ModelAttribute("userModel")
@@ -33,10 +34,18 @@ public class UserRegistrationController {
     }
 
     @PostMapping("/register")
-    public String register(@Valid UserRegisterDTO userModel,
+    public String register(@RequestParam("g-recaptcha-response") String reCaptchaResponse,
+                           @Valid UserRegisterDTO userModel,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) {
-        //TODO: Registration email activation link
+
+        Boolean isNotBot = reCaptchaService.verify(reCaptchaResponse)
+                .map(ReCaptchaResponseDTO::isSuccess)
+                .orElse(false);
+
+        if(!isNotBot) {
+            return  "redirect:/";
+        }
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userModel", userModel);
@@ -50,6 +59,6 @@ public class UserRegistrationController {
 
         userService.registerUser(userModel);
 
-        return "redirect:/";
+        return "redirect:/users/login";
     }
 }
