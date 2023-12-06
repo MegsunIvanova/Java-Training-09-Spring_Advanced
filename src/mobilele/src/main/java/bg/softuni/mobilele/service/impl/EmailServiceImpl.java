@@ -1,6 +1,7 @@
 package bg.softuni.mobilele.service.impl;
 
 import bg.softuni.mobilele.service.EmailService;
+import bg.softuni.mobilele.service.aop.WarnIfExecutionExceeds;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ public class EmailServiceImpl implements EmailService {
         this.mobileleEmail = mobileleEmail;
     }
 
+    @WarnIfExecutionExceeds(timeInMillis = 600 )
     @Override
     public void sendRegistrationEmail(String userEmail, String userName, String activationCode) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

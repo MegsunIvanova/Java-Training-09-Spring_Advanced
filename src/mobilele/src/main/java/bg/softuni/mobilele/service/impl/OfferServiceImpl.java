@@ -13,6 +13,7 @@ import bg.softuni.mobilele.repository.OfferRepository;
 import bg.softuni.mobilele.repository.UserRepository;
 import bg.softuni.mobilele.service.MonitoringService;
 import bg.softuni.mobilele.service.OfferService;
+import bg.softuni.mobilele.service.aop.WarnIfExecutionExceeds;
 import bg.softuni.mobilele.service.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -54,15 +55,18 @@ public class OfferServiceImpl implements OfferService {
         return newOffer.getUuid();
     }
 
+    @WarnIfExecutionExceeds(timeInMillis = 1000L)
     @Override
     public Page<OfferSummaryDTO> getAllOffers(Pageable pageable) {
-        monitoringService.logOfferSearch();
+
+        System.out.println("IN GET ALL OFFERS");
 
         return offerRepository
                 .findAll(pageable)
                 .map(OfferServiceImpl::mapAsSummary);
     }
 
+    @WarnIfExecutionExceeds(timeInMillis = 500L)
     @Override
     public Optional<OfferDetailDTO> getOfferDetail(UUID uuid, UserDetails viewer) {
 
